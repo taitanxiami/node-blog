@@ -7,7 +7,5 @@ const port = 8090
 
 const server = http.createServer(app)
 
-http.createServer()
-
 server.listen(port)
 

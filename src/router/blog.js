@@ -1,27 +1,29 @@
 
+const { getList } = require('../controller/blog')
+const { SuccessModel, ErrorModel }  = require('../model/resModel');
 const handleBlogRouter = (req,res) => {
 
-    const method = req.method;
-     const url=  req.url
-     const path= url.split('?')[0]
-    console.log(url)
-     if(method === 'GET' && url === '/api/blog/list') {
-         return {
-             msg:'这是博客列表接口'
-         }
+     const method = req.method;
+     const path=  req.path
+    //  console.log(path)
+     if(method === 'GET' && path === '/api/blog/list') {
+        const authod = req.query.author || ''
+        const keyword = req.query.keyword || ''
+        const list =   getList(authod,keyword)
+         return new SuccessModel(list)
      }
 
-     if(method === 'GET' && url === '/api/blog/detail') {
+     if(method === 'GET' && path === '/api/blog/detail') {
         return {
             msg:'这是博客详情接口'
         }
     }
-    if(method === 'POST' && url === '/api/blog/new') {
+    if(method === 'POST' && path === '/api/blog/new') {
         return {
             msg:'这是新建博客接口'
         }
     }
-    if(method === 'POST' && url === '/api/blog/update') {
+    if(method === 'POST' && path === '/api/blog/update') {
         return {
             msg:'这是博客更新接口'
         }
