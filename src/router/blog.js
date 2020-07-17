@@ -1,11 +1,10 @@
 
-const { getList } = require('../controller/blog')
+const { getList ,getDetail} = require('../controller/blog')
 const { SuccessModel, ErrorModel }  = require('../model/resModel');
 const handleBlogRouter = (req,res) => {
 
      const method = req.method;
-     const path=  req.path
-    //  console.log(path)
+     const path =  req.path    
      if(method === 'GET' && path === '/api/blog/list') {
         const authod = req.query.author || ''
         const keyword = req.query.keyword || ''
@@ -14,8 +13,12 @@ const handleBlogRouter = (req,res) => {
      }
 
      if(method === 'GET' && path === '/api/blog/detail') {
-        return {
-            msg:'这是博客详情接口'
+        const id = req.query.id
+        if(id) {
+            const detail = getDetail(id)
+            return new SuccessModel(detail)    
+        }else {
+            return new ErrorModel('缺少id')
         }
     }
     if(method === 'POST' && path === '/api/blog/new') {
