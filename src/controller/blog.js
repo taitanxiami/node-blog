@@ -2,7 +2,6 @@ const {exec} = require('../db/mysql')
 
 const getList = (author,keyword) => {
 
-
     let sql = `select * from blogs where 1=1 `
 
     if(author) {
@@ -19,13 +18,8 @@ const getList = (author,keyword) => {
 }
 
 const getDetail = (id)=> {
-    return {
-        id:1,
-        title:'标题1',
-        content:'内容1',
-        creatTime:15662627277272,
-        author: '张海'
-    }
+   let sql = `select * from blogs where id = ${id}`
+   return exec(sql)
 }
 
 const newBlog = (blogData = {}) => {

@@ -50,16 +50,7 @@ const server = (req, res) => {
 
         //这样处理路由的时候 都可以通过req.body 获取postData了
         req.body = postData
-        
-        // 博客路由
-        // const blogData = handleBlogRouter(req,res)
-        // if(blogData) {
-        //     res.end(JSON.stringify(blogData))
-        //     return 
-        // }
-        
-
-        const blogResult =    handleBlogRouter(req,res)
+        const blogResult = handleBlogRouter(req,res)
          if(blogResult) {
              blogResult.then(list=> {
                 res.end(JSON.stringify(list))

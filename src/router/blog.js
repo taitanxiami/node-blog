@@ -27,13 +27,16 @@ const handleBlogRouter = (req,res) => {
      }
 
      if(method === 'GET' && path === '/api/blog/detail') {
-        
-        if(id) {
-            const detail = getDetail(id)
-            return new SuccessModel(detail)    
-        }else {
-            return new ErrorModel('缺少id')
-        }
+     
+            const result = getDetail(id)
+            return result.then(detail => {
+                console.log(detail)
+                return new SuccessModel(detail) 
+            }).catch(err => {
+                return  new ErrorModel(err)
+            })
+               
+       
     }
     if(method === 'POST' && path === '/api/blog/new') {
 
