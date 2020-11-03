@@ -2,32 +2,78 @@
 const  handleBlogRouter = require('./src/router/blog')
 const handleUserRouter = require('./src/router/user')
 const querystring = require('querystring')
+const { resolve } = require('path')
+const { rejects } = require('assert')
+
+
+ //处理post 数据
+
+ const getPostData = (req) => {
+     const promise = new Promise((resolve,reject) => {
+        if(req.method !== 'POST') {
+            resolve({})
+            return
+        }
+
+        if(req.headers['content-type'] !== 'application/json') {
+            resolve({})
+            return  
+        }
+
+        let postData = ''
+        req.on('data',chunk => {
+            postData += chunk.toString()
+        })
+        req.on('end', ()=> {
+            if(!postData) {
+                resolve({})
+                return  
+            }
+            resolve(JSON.parse(postData))
+        })
+     })
+     return promise
+ }
+
 const server = (req, res) => {
 
     //返回json
-    res.setHeader('Content_type','application/json')
+    res.setHeader('Content-type','application/json')
+   
 
     req.query = querystring.parse(req.url.split('?')[1])
-    req.path = req.url.split('?')[0]
-    // 博客路由
-    const blogData = handleBlogRouter(req,res)
-    // console.log(blogData)
-    if(blogData) {
-        res.end(JSON.stringify(blogData))
-        return 
-    }
+    req.path = req.url.split('?')[0]  
 
-    //登录路由
-    const userdata = handleUserRouter(req,res)
-    if(userdata) {
-        res.end (
-            JSON.stringify(userdata)
-        )
-        return
-    }
-    res.writeHead(404, {"Content-type": "text/plain"})
-    res.write("404 Not Found\n")
-    res.end()
+    //处理postData
+    getPostData(req).then(postData => {
+
+        //这样处理路由的时候 都可以通过req.body 获取postData了
+        req.body = postData
+        
+        // 博客路由
+        const blogData = handleBlogRouter(req,res)
+     
+        if(blogData) {
+            res.end(JSON.stringify(blogData))
+            return 
+        }
+
+        //登录路由
+        const userdata = handleUserRouter(req,res)
+        if(userdata) {
+            res.end (
+                JSON.stringify(userdata)
+            )
+            return
+        }
+        res.writeHead(404, {"Content-type": "text/plain"})
+        res.write("404 Not Found\n")
+        res.end()
+
+    })
+
+
+
 }
 
 
