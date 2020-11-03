@@ -4,6 +4,7 @@ const handleUserRouter = require('./src/router/user')
 const querystring = require('querystring')
 const { resolve } = require('path')
 const { rejects } = require('assert')
+const blog = require('./src/controller/blog')
 
 
  //处理post 数据
@@ -51,12 +52,21 @@ const server = (req, res) => {
         req.body = postData
         
         // 博客路由
-        const blogData = handleBlogRouter(req,res)
-     
-        if(blogData) {
-            res.end(JSON.stringify(blogData))
-            return 
-        }
+        // const blogData = handleBlogRouter(req,res)
+        // if(blogData) {
+        //     res.end(JSON.stringify(blogData))
+        //     return 
+        // }
+        
+
+        const blogResult =    handleBlogRouter(req,res)
+         if(blogResult) {
+             blogResult.then(list=> {
+                res.end(JSON.stringify(list))
+             })
+             //防止往下走路由
+             return
+         }
 
         //登录路由
         const userdata = handleUserRouter(req,res)
