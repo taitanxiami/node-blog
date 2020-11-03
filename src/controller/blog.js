@@ -23,10 +23,10 @@ const getDetail = (id)=> {
 }
 
 const newBlog = (blogData = {}) => {
-     //blogData 包含title content 数据
-     return {
-        id:3
-    }
+     //blogData 包含title content 数据     
+     let time = Date.now()
+     let sql = `insert into blogs (title,content,createtime,author) VALUES ('${blogData.title}','${blogData.content}','${time}','${blogData.author}')`
+     return exec(sql)
 }
 
 const updateBlog = (id,blogData) => {

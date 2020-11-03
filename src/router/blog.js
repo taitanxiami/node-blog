@@ -40,8 +40,18 @@ const handleBlogRouter = (req,res) => {
     }
     if(method === 'POST' && path === '/api/blog/new') {
 
-        const postData = req.body        
-        return new SuccessModel(newBlog(postData))
+        const postData = req.body   
+        return   newBlog(postData).then(blog => {
+            if(blog.affectedRows == 1) {
+                return new SuccessModel()
+            }else {
+                new ErrorModel()
+            }
+         }).catch(err => {
+            return  new ErrorModel(err)
+        })
+        
+        
     }
     if(method === 'POST' && path === '/api/blog/update') {
         const result  = updateBlog(id,req.body)
