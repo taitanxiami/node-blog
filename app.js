@@ -62,9 +62,9 @@ const server = (req, res) => {
         //登录路由
         const userdata = handleUserRouter(req,res)
         if(userdata) {
-            res.end (
-                JSON.stringify(userdata)
-            )
+            userdata.then(data => {
+                res.end(JSON.stringify(data))
+            })
             return
         }
         res.writeHead(404, {"Content-type": "text/plain"})
