@@ -46,10 +46,8 @@ const updateBlog = (id,blogData) => {
 }
 const delBlog = (id) => {
     //id 博客id
-    if(!id) {
-        return false
-    }
-    return true
+    let sql = `DELETE FROM blogs WHERE id = '${id}'`
+    return exec(sql);
 }
 module.exports = {
     getList,

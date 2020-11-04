@@ -62,18 +62,22 @@ const handleBlogRouter = (req,res) => {
         }).catch(err => {
             return  new ErrorModel(err)
         })  
-         
-       
-        
+                        
     }
 
     if(method === 'POST' && path === '/api/blog/del') {
-        const result  = delBlog(id)
-        if(result) {
-            return new SuccessModel()
-        }else {
-            return new ErrorModel()
-        }
+        const result  = delBlog(id)                
+        return  result.then(blog => {
+            console.log(blog);
+            if(blog.affectedRows == 1) {
+                return new SuccessModel()
+            }else {
+                return  new ErrorModel()
+            }
+        }).catch(err => {
+            return  new ErrorModel(err)
+        }) 
+       
         
     }
 }
