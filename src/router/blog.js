@@ -17,9 +17,10 @@ const handleBlogRouter = (req,res) => {
      if(method === 'GET' && path === '/api/blog/list') {
         const authod = req.query.author || ''
         const keyword = req.query.keyword || ''
+        console.log(req.sesstion)
         const result =   getList(authod,keyword)
        return  result.then(list => {
-        console.log(list)
+        // console.log(list)
             return new SuccessModel(list)
         })
 
@@ -71,7 +72,8 @@ const handleBlogRouter = (req,res) => {
 
     if(method === 'POST' && path === '/api/blog/del') {
 
-        const author = 'lisi'
+        const author = req.cookie.usernamne
+        console.log(author);
         const result  = delBlog(id,author)                
         return  result.then(val => {            
             if(val) {
