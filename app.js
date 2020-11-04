@@ -45,6 +45,22 @@ const server = (req, res) => {
     req.query = querystring.parse(req.url.split('?')[1])
     req.path = req.url.split('?')[0]  
 
+
+    //解析cooike 
+
+    req.cookie = {}
+    let cookieStr = req.headers.cookie || ''
+    cookieStr.split(';').forEach(item => {
+        if(!item) {
+            return
+        } 
+       const arr = item.split('=')
+       const key = arr[0].trim()
+       const val = arr[1].trim()
+       req.cookie[key] = val
+    })
+   
+
     //处理postData
     getPostData(req).then(postData => {
 
