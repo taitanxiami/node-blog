@@ -41,8 +41,11 @@ const handleBlogRouter = (req,res) => {
     if(method === 'POST' && path === '/api/blog/new') {
         const postData = req.body   
         return   newBlog(postData).then(blog => {
+            console.log(blog)
             if(blog.affectedRows == 1) {
-                return new SuccessModel()
+                return new SuccessModel({
+                    insertId:blog.insertId
+                })
             }else {
                 return  new ErrorModel()
             }
@@ -67,8 +70,7 @@ const handleBlogRouter = (req,res) => {
 
     if(method === 'POST' && path === '/api/blog/del') {
         const result  = delBlog(id)                
-        return  result.then(blog => {
-            console.log(blog);
+        return  result.then(blog => {            
             if(blog.affectedRows == 1) {
                 return new SuccessModel()
             }else {
