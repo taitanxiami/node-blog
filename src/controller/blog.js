@@ -31,11 +31,18 @@ const newBlog = (blogData = {}) => {
 
 const updateBlog = (id,blogData) => {
     //blogData 包含title content 数据
-    //id 博客id
-    if(!id) {
-        return false
+    //id 博客id    
+    let sql = `UPDATE blogs SET `
+    // serialno = '20170319010010' , name = '名字10'  WHERE id = 10;
+    if(blogData.title) {
+        sql += `title = '${blogData.title}'`
     }
-    return true
+    if(blogData.content) {
+        sql += `, content = '${blogData.content}' `
+    }
+    sql += `where id = ${id}`
+    return exec(sql)
+  
 }
 const delBlog = (id) => {
     //id 博客id

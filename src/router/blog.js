@@ -39,27 +39,31 @@ const handleBlogRouter = (req,res) => {
        
     }
     if(method === 'POST' && path === '/api/blog/new') {
-
         const postData = req.body   
         return   newBlog(postData).then(blog => {
             if(blog.affectedRows == 1) {
                 return new SuccessModel()
             }else {
-                new ErrorModel()
+                return  new ErrorModel()
             }
          }).catch(err => {
             return  new ErrorModel(err)
-        })
-        
-        
+        })                
     }
     if(method === 'POST' && path === '/api/blog/update') {
         const result  = updateBlog(id,req.body)
-        if(result) {
-            return new SuccessModel()
-        }else {
-            return new ErrorModel()
-        }
+       
+        return  result.then((blog) => {
+            if(blog.affectedRows == 1) {
+                return new SuccessModel()
+            }else {
+                return  new ErrorModel()
+            }
+        }).catch(err => {
+            return  new ErrorModel(err)
+        })  
+         
+       
         
     }
 
