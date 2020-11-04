@@ -56,11 +56,12 @@ const handleBlogRouter = (req,res) => {
     if(method === 'POST' && path === '/api/blog/update') {
         const result  = updateBlog(id,req.body)
        
-        return  result.then((blog) => {
-            if(blog.affectedRows == 1) {
-                return new SuccessModel()
+        return  result.then(val => {
+            // console.log('val',val)
+            if(val) {
+                return new SuccessModel('更新成功')
             }else {
-                return  new ErrorModel()
+                return  new ErrorModel('更新失败')
             }
         }).catch(err => {
             return  new ErrorModel(err)
@@ -69,12 +70,14 @@ const handleBlogRouter = (req,res) => {
     }
 
     if(method === 'POST' && path === '/api/blog/del') {
-        const result  = delBlog(id)                
-        return  result.then(blog => {            
-            if(blog.affectedRows == 1) {
-                return new SuccessModel()
+
+        const author = 'lisi'
+        const result  = delBlog(id,author)                
+        return  result.then(val => {            
+            if(val) {
+                return new SuccessModel('删除成功')
             }else {
-                return  new ErrorModel()
+                return  new ErrorModel('删除失败')
             }
         }).catch(err => {
             return  new ErrorModel(err)

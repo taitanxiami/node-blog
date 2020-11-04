@@ -53,6 +53,7 @@ const server = (req, res) => {
         const blogResult = handleBlogRouter(req,res)
          if(blogResult) {
              blogResult.then(list=> {
+                 console.log(list);
                 res.end(JSON.stringify(list))
              })
              //防止往下走路由
