@@ -2,12 +2,10 @@
 const  handleBlogRouter = require('./src/router/blog')
 const handleUserRouter = require('./src/router/user')
 const querystring = require('querystring')
-const { resolve } = require('path')
-const { rejects } = require('assert')
-// const blog = require('./src/controller/blog')
+const {get ,set } = require('./src/db/redis')
+const {nanoid} = require('nanoid')
 
 const getCookieExpires = () => {
-
     const d = new Date()
     d.setTime(d.getTime() + (12 * 60 * 60 * 1000))
     return d.toGMTString()
@@ -80,7 +78,9 @@ const server = (req, res) => {
     }else {
         console.log(2222);
         needSetCookie = true
-        userId = `${Date.now()}_${Math.random()}`
+        // userId = `${Date.now()}_${Math.random()}`
+        // 生成id
+        userId = nanoid()
         SESSTION_DATA[userId] = {}
     }
     req.sesstion = SESSTION_DATA[userId]
