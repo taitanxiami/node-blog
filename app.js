@@ -4,6 +4,7 @@ const handleUserRouter = require('./src/router/user')
 const querystring = require('querystring')
 const {get ,set } = require('./src/db/redis')
 const {nanoid} = require('nanoid')
+const user = require('./src/controller/user')
 
 const getCookieExpires = () => {
     const d = new Date()
@@ -11,7 +12,7 @@ const getCookieExpires = () => {
     return d.toGMTString()
 }
 // session 数据
-const SESSTION_DATA = {}
+// const SESSTION_DATA = {}
 
  //处理post 数据
 
@@ -71,21 +72,43 @@ const server = (req, res) => {
     let needSetCookie = false
     let userId  = req.cookie.userid
     console.log('userId',userId);
-    if(userId) {
-        if(!SESSTION_DATA[userId]) {
-            SESSTION_DATA[userId] = {}
-        }
-    }else {
-        console.log(2222);
+
+    //1. session 存到内存里
+
+    // if(userId) {
+    //     if(!SESSTION_DATA[userId]) {
+    //         SESSTION_DATA[userId] = {}
+    //     }
+    // }else {
+    //     console.log(2222);
+    //     needSetCookie = true
+    //     // userId = `${Date.now()}_${Math.random()}`
+    //     // 生成id
+    //     userId = nanoid()
+    //     SESSTION_DATA[userId] = {}
+    // }
+    // req.sesstion = SESSTION_DATA[userId]
+
+ 
+
+    // 2. session 存到redis
+    if(!userId) {
         needSetCookie = true
-        // userId = `${Date.now()}_${Math.random()}`
-        // 生成id
         userId = nanoid()
-        SESSTION_DATA[userId] = {}
+        set(userId,{})
     }
-    req.sesstion = SESSTION_DATA[userId]
-    //处理postData
-    getPostData(req).then(postData => {
+    req.sesstionId = userId;
+
+    get(req.sesstionId).then(val => {
+        if(val) {
+            req.sesstion = val
+        }else {
+            set(req.sesstionId,{})
+            req.sesstion = {}            
+        }
+     //处理postData
+        return  getPostData(req)
+    }).then(postData => {
 
         //这样处理路由的时候 都可以通过req.body 获取postData了
         req.body = postData
