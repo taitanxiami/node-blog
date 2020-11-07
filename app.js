@@ -91,7 +91,7 @@ const server = (req, res) => {
 
  
 
-    // 2. session 存到redis
+    // 2. session 存到redis 获取获取sesstion
     if(!userId) {
         needSetCookie = true
         userId = nanoid()
