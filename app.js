@@ -4,7 +4,9 @@ const handleUserRouter = require('./src/router/user')
 const querystring = require('querystring')
 const {get ,set } = require('./src/db/redis')
 const {nanoid} = require('nanoid')
+const {access}  =require('./src/utils/log')
 const user = require('./src/controller/user')
+const { accessSync } = require('fs')
 
 const getCookieExpires = () => {
     const d = new Date()
@@ -44,6 +46,11 @@ const getCookieExpires = () => {
  }
 
 const server = (req, res) => {
+
+
+    //收集日志
+
+    access(`${req.method} -- ${req.url} -- ${req.headers['user-agent']} -- ${Date.now()}`)
 
     //返回json
     res.setHeader('Content-type','application/json')
