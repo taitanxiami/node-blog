@@ -1,4 +1,5 @@
 const {exec} = require('../db/mysql')
+const xss = require('xss')
 
 const getList = (author,keyword) => {
 
@@ -28,7 +29,9 @@ return exec(sql).then(rows=> {
 const newBlog = (blogData = {}) => {
      //blogData 包含title content 数据     
      let time = Date.now()
-     let sql = `insert into blogs (title,content,createtime,author) VALUES ('${blogData.title}','${blogData.content}','${time}','${blogData.author}')`
+    // 转换 特殊符号
+     const title = xss(blogData.title)
+     let sql = `insert into blogs (title,content,createtime,author) VALUES ('${title}','${blogData.content}','${time}','${blogData.author}')`
      return exec(sql)
 }
 
