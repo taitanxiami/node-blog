@@ -25,13 +25,25 @@ const handleBlogRouter = (req,res) => {
 
 
      if(method === 'GET' && path === '/api/blog/list') {
-        const authod = req.query.author || ''
+        let author = req.query.author || ''
         const keyword = req.query.keyword || ''
-        console.log(req.sesstion)
-        const result =   getList(authod,keyword)
+
+        //管理页面只能查询自己的博客
+        if(req.query.isadmin) {
+
+            const loginCheckResult = loginCheck(req)
+            if(loginCheckResult) {
+                //未登录
+                return loginCheckResult
+            }
+            author = req.sesstion.username
+        }
+        const result =   getList(author,keyword)
        return  result.then(list => {
-        // console.log(list)
+       
             return new SuccessModel(list)
+        }).catch(err => {
+            return  new ErrorModel(err)
         })
 
          
@@ -57,8 +69,9 @@ const handleBlogRouter = (req,res) => {
             return loginCheckResult
         }
 
-        req.body.author = req.sesstion.usernamne
+        req.body.author = req.sesstion.username
         const postData = req.body   
+       
         return   newBlog(postData).then(blog => {
             console.log(blog)
             if(blog.affectedRows == 1) {
@@ -99,9 +112,10 @@ const handleBlogRouter = (req,res) => {
             //未登录
             return loginCheckResult
         }
-        const author = req.sesstion.usernamne        
+        const author = req.sesstion.username        
         const result  = delBlog(id,author)                
-        return  result.then(val => {            
+        return  result.then(val => {     
+            console.log('val',val);       
             if(val) {
                 return new SuccessModel('删除成功')
             }else {

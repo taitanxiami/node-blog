@@ -5,7 +5,7 @@ const getList = (author,keyword) => {
     let sql = `select * from blogs where 1=1 `
 
     if(author) {
-        sql += `and author = ${author} `
+        sql += `and author = '${author}' `
     }
 
     if(keyword) {
@@ -19,7 +19,10 @@ const getList = (author,keyword) => {
 
 const getDetail = (id)=> {
    let sql = `select * from blogs where id = ${id}`
-   return exec(sql)
+//    return exec(sql)
+return exec(sql).then(rows=> {
+    return rows[0] || {}
+})
 }
 
 const newBlog = (blogData = {}) => {
@@ -51,8 +54,10 @@ const updateBlog = (id,blogData) => {
 }
 const delBlog = (id,author) => {
     //id 博客id
-    let sql = `DELETE FROM blogs WHERE id = '${id}' and author = '${author}'`
+    let sql = `DELETE FROM blogs WHERE id = ${id} and author = '${author}'`
+    console.log(sql);
     return exec(sql).then(blog=> {
+        console.log(blog);
         if(blog.affectedRows  > 0) {
             return true
         }
